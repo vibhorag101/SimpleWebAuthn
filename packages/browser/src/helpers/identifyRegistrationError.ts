@@ -1,3 +1,4 @@
+import { browserSupportsWebAuthn } from './browserSupportsWebAuthn';
 import { isValidDomain } from './isValidDomain';
 import { WebAuthnError } from './webAuthnError';
 
@@ -55,11 +56,31 @@ export function identifyRegistrationError({
      * Pass the error directly through. Platforms are overloading this error beyond what the spec
      * defines and we don't want to overwrite potentially useful error messages.
      */
-    return new WebAuthnError({
-      message: error.message,
-      code: 'ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY',
-      cause: error,
-    });
+    // check if origin is opaque origin
+    if (window.location.origin === 'null') {
+      // https://www.w3.org/TR/webauthn-2/#sctn-createCredential (Step 7)
+      return new WebAuthnError({
+        message: 'The origin is an opaque origin',
+        code: 'ERROR_OPAQUE_ORIGIN',
+        cause: error,
+      });
+    }
+    // check if browser supports webauthn
+    else if(!browserSupportsWebAuthn()){
+      return new WebAuthnError({
+        message: "The browser doesn't support WebAuthn",
+        code: 'ERROR_WEBAUTHN_NOT_SUPPORTED',
+        cause: error,
+      });
+    }
+    else {
+      return new WebAuthnError({
+        message: "The user cancelled the operation. Please try again",
+        code: 'ERROR_USER_CANCELLED_OPERATION',
+        cause: error,
+      });
+    }
+
   } else if (error.name === 'NotSupportedError') {
     const validPubKeyCredParams = publicKey.pubKeyCredParams.filter(
       param => param.type === 'public-key',

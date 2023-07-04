@@ -1,54 +1,47 @@
 {
-  "name": "simplewebauthn-monorepo",
-  "private": true,
+  "name": "@simplewebauthn/browser",
+  "version": "7.2.0",
+  "description": "SimpleWebAuthn for Browsers",
+  "main": "dist/bundle/index.js",
+  "unpkg": "dist/bundle/index.umd.min.js",
+  "types": "dist/types/index.d.ts",
+  "author": "Matthew Miller <matthew@millerti.me>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MasterKale/SimpleWebAuthn.git",
+    "directory": "packages/browser"
+  },
+  "homepage": "https://github.com/MasterKale/SimpleWebAuthn/tree/master/packages/browser#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "bootstrap:ci": "lerna bootstrap --hoist",
-    "clean": "lerna clean -y && rm -f ./packages/**/package-lock.json && rm -rf ./packages/**/dist",
-    "get-it-onto-npm": "lerna bootstrap && rm -f ./packages/**/package-lock.json && lerna publish",
-    "lint": "prettier --write packages/**/src/**/*.ts example/**/*.ts && eslint --fix packages/**/src/**/*.ts example/**/*.ts",
-    "docs": "npm run bootstrap:ci && typedoc --tsconfig tsconfigdoc.json",
-    "test": "lerna run test",
-    "build:types": "lerna run build --scope=@simplewebauthn/typescript-types",
-    "build:iso-webcrypto": "lerna run compile --scope=@simplewebauthn/iso-webcrypto",
-    "build:browser": "lerna run build --scope=@simplewebauthn/browser",
-    "build:server": "lerna run build --scope=@simplewebauthn/server",
-    "dev:server": "lerna exec npm run test:watch --scope=@simplewebauthn/server",
-    "dev:browser": "lerna exec npm run test:watch --scope=@simplewebauthn/browser"
+    "build": "rimraf dist && rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "npm test -- --coverage",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "typescript",
+    "webauthn",
+    "passkeys",
+    "fido",
+    "umd"
+  ],
+  "dependencies": {
+    "@simplewebauthn/typescript-types": "*",
+    "rimraf": "^5.0.1",
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.9",
-    "@types/jest": "^27.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "@typescript-eslint/parser": "^5.45.0",
-    "eslint": "^8.28.0",
-    "husky": "^7.0.2",
-    "jest": "^27.0.6",
-    "jest-environment-jsdom": "^27.0.6",
-    "lerna": "^6.0.3",
-    "lint-staged": "^11.1.2",
-    "nodemon": "^2.0.20",
-    "nx": "^15.0.13",
-    "prettier": "^2.8.0",
-    "rimraf": "^3.0.2",
-    "semver": "^7.3.2",
-    "ts-jest": "^27.0.5",
-    "ts-morph": "^11.0.3",
-    "ts-node": "^10.2.1",
-    "typedoc": "^0.23.21",
-    "typedoc-plugin-missing-exports": "^1.0.0",
-    "typescript": "^4.9.3"
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "rollup": "^2.52.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-version-injector": "^1.3.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,js}": [
-      "prettier --write",
-      "eslint --fix",
-      "git add"
-    ]
-  }
+  "type": "module",
+  "gitHead": "ba039fdd5fdff87f78d3bd246e9bea5f7aa39ccb"
 }
