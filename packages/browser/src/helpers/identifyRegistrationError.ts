@@ -52,10 +52,6 @@ export function identifyRegistrationError({
       cause: error
     });
   } else if (error.name === 'NotAllowedError') {
-    /**
-     * Pass the error directly through. Platforms are overloading this error beyond what the spec
-     * defines and we don't want to overwrite potentially useful error messages.
-     */
     // check if origin is opaque origin
     if (window.location.origin === 'null') {
       // https://www.w3.org/TR/webauthn-2/#sctn-createCredential (Step 7)
